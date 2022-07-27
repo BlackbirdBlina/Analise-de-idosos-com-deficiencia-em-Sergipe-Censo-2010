@@ -1,6 +1,9 @@
-setwd ("C:\\Users\\sabri\\OneDrive\\Documentos\\Bina\\UFRN\\Mestrado\\Disciplinas\\Métodos Quantitativos 1\\Aulas\\Trabalho final")
+#Author Sabrina Barbosa
+#26-07-2022
+#Universidade Federal do Rio Grande do Norte
+#Departamento de Demografia - CCET
 
-#Pacotes necessários
+#Pacotes necessÃ¡rios
 library(pacman)
 p_load(tidyverse,data.table,readr,readxl,vroom, tableone, gtsummary, ggplot2)
 
@@ -8,33 +11,33 @@ p_load(tidyverse,data.table,readr,readxl,vroom, tableone, gtsummary, ggplot2)
 layoutdados <- read_excel("Layout_microdados_Amostra.xls", sheet = "PESS",
                           range = cell_limits(c(2, 1), c(NA, 12)))
 
-#Exclusão de colunas desnecessárias
+#ExclusÃ£o de colunas desnecessÃ¡rias
 layoutdados <- layoutdados[ ,-c(2, 3, 4, 5, 6, 7, 11, 12)]
 
 #Convertendo os dados importados em um novo formato (data frame) para armazenar tabelas
-#Em seguida é utilizado o "rownames" para alterar o nome das linhas utilizando os códigos das
-#variáveis para serem os índices/nomes dessas linhas
-#Isso foi feito para que as linhas não tivessem referência numérica.
+#Em seguida Ã© utilizado o "rownames" para alterar o nome das linhas utilizando os cÃ³digos das
+#variÃ¡veis para serem os Ã­ndices/nomes dessas linhas
+#Isso foi feito para que as linhas nÃ£o tivessem referÃªncia numÃ©rica.
 layoutdados <- as.data.frame(layoutdados)
 rownames(layoutdados) <- layoutdados[ , 1]
 layoutdados <- layoutdados[ ,-c(1)]
 
-#Colocando nome nas colunas e identificando quais variáveis serão utilizadas para este algoritmo
+#Colocando nome nas colunas e identificando quais variÃ¡veis serÃ£o utilizadas para este algoritmo
 colnames(layoutdados) <- c("Inicio", "Final", "INT")
 layoutdados
-#De acordo com a planilha do IBGE do código V0614 até o código V0617 se refere às dificuldades/deficiência
+#De acordo com a planilha do IBGE do cÃ³digo V0614 atÃ© o cÃ³digo V0617 se refere Ã s dificuldades/deficiÃªncia
 varalvo <- c("V0601", "V6036", "V6531", "V1006", "V0606", "V6400", "V0637", 
              "V0502", "V5030", "V0657", "V0614", "V0615", "V0616", "V0617")
               
 layoutdados <- layoutdados[varalvo, ]
 view(layoutdados)
 
-#Lendo e guardando o arquivo .txt na variável serg2010
+#Lendo e guardando o arquivo .txt na variÃ¡vel serg2010
 serg2010 <- vroom_fwf(file = 'Amostra_Pessoas_28.txt', fwf_positions(layoutdados$Inicio,
                                                                     layoutdados$Final,
                                                         col_names = rownames(layoutdados)))
 
-#------x------x------x------Alterando os valores de cada variável------x------x------x------# 
+#------x------x------x------Alterando os valores de cada variÃ¡vel------x------x------x------# 
 serg2010$V0601[serg2010$V0601 == 1] <- "Masculino"
 serg2010$V0601[serg2010$V0601 == 2] <- "Feminino"
 
@@ -50,99 +53,99 @@ serg2010$V0606[serg2010$V0606 == 1] <- "Branca"
 serg2010$V0606[serg2010$V0606 == 2] <- "Preta"
 serg2010$V0606[serg2010$V0606 == 3] <- "Amarela"
 serg2010$V0606[serg2010$V0606 == 4] <- "Parda"
-serg2010$V0606[serg2010$V0606 == 5] <- "Indígena"
+serg2010$V0606[serg2010$V0606 == 5] <- "IndÃ­gena"
 serg2010$V0606[serg2010$V0606 == 9] <- "Ignorado"
 
-serg2010$V6400[serg2010$V6400 == 1] <- "Sem instrução e fundamental incompleto"
-serg2010$V6400[serg2010$V6400 == 2] <- "Fundamental completo e médio incompleto"
-serg2010$V6400[serg2010$V6400 == 3] <- "Médio completo e superior incompleto"
+serg2010$V6400[serg2010$V6400 == 1] <- "Sem instruÃ§Ã£o e fundamental incompleto"
+serg2010$V6400[serg2010$V6400 == 2] <- "Fundamental completo e mÃ©dio incompleto"
+serg2010$V6400[serg2010$V6400 == 3] <- "MÃ©dio completo e superior incompleto"
 serg2010$V6400[serg2010$V6400 == 4] <- "Superior completo"
-serg2010$V6400[serg2010$V6400 == 5] <- "Não determinado"
+serg2010$V6400[serg2010$V6400 == 5] <- "NÃ£o determinado"
 
 serg2010$V0637[serg2010$V0637 == 1] <- "Sim"
-serg2010$V0637[serg2010$V0637 == 2] <- "Não, mas viveu"
-serg2010$V0637[serg2010$V0637 == 3] <- "Não, nunca viveu"
+serg2010$V0637[serg2010$V0637 == 2] <- "NÃ£o, mas viveu"
+serg2010$V0637[serg2010$V0637 == 3] <- "NÃ£o, nunca viveu"
 
-serg2010$V0502[serg2010$V0502 == "01"] <- "Pessoa responsável pelo domicílio"
-serg2010$V0502[serg2010$V0502 == "02"] <- "Cônjuge ou companheiro(a) de sexo diferente"
-serg2010$V0502[serg2010$V0502 == "03"] <- "Cônjuge ou companheiro(a) do mesmo sexo"
-serg2010$V0502[serg2010$V0502 == "04"] <- "Filho(a) do responsável e do cônjuge"
-serg2010$V0502[serg2010$V0502 == "05"] <- "Filho(a) somente do responsável"
+serg2010$V0502[serg2010$V0502 == "01"] <- "Pessoa responsÃ¡vel pelo domicÃ­lio"
+serg2010$V0502[serg2010$V0502 == "02"] <- "CÃ´njuge ou companheiro(a) de sexo diferente"
+serg2010$V0502[serg2010$V0502 == "03"] <- "CÃ´njuge ou companheiro(a) do mesmo sexo"
+serg2010$V0502[serg2010$V0502 == "04"] <- "Filho(a) do responsÃ¡vel e do cÃ´njuge"
+serg2010$V0502[serg2010$V0502 == "05"] <- "Filho(a) somente do responsÃ¡vel"
 serg2010$V0502[serg2010$V0502 == "06"] <- "Enteado(a)"
 serg2010$V0502[serg2010$V0502 == "07"] <- "Genro ou nora"
-serg2010$V0502[serg2010$V0502 == "08"] <- "Pai, mãe, padrasto ou madrasta"
+serg2010$V0502[serg2010$V0502 == "08"] <- "Pai, mÃ£e, padrasto ou madrasta"
 serg2010$V0502[serg2010$V0502 == "09"] <- "Sogro(a)"
 serg2010$V0502[serg2010$V0502 == 10] <- "Neto(a)"
 serg2010$V0502[serg2010$V0502 == 11] <- "Bisneto(a)"
-serg2010$V0502[serg2010$V0502 == 12] <- "Irmão ou irmã"
-serg2010$V0502[serg2010$V0502 == 13] <- "Avô ou avó"
+serg2010$V0502[serg2010$V0502 == 12] <- "IrmÃ£o ou irmÃ£"
+serg2010$V0502[serg2010$V0502 == 13] <- "AvÃ´ ou avÃ³"
 serg2010$V0502[serg2010$V0502 == 14] <- "Outro parente"
 serg2010$V0502[serg2010$V0502 == 15] <- "Agregado(a)"
 serg2010$V0502[serg2010$V0502 == 16] <- "Convivente"
 serg2010$V0502[serg2010$V0502 == 17] <- "Pensionista"
-serg2010$V0502[serg2010$V0502 == 18] <- "Empregado(a) doméstico(a)"
-serg2010$V0502[serg2010$V0502 == 19] <- "Parente do(a) empregado(a)  doméstico(a)"
-serg2010$V0502[serg2010$V0502 == 20] <- "Individual em domicílio coletivo"
+serg2010$V0502[serg2010$V0502 == 18] <- "Empregado(a) domÃ©stico(a)"
+serg2010$V0502[serg2010$V0502 == 19] <- "Parente do(a) empregado(a)  domÃ©stico(a)"
+serg2010$V0502[serg2010$V0502 == 20] <- "Individual em domicÃ­lio coletivo"
 
 serg2010$V5030[serg2010$V5030 == 1] <- "Unipessoal"
 serg2010$V5030[serg2010$V5030 == 2] <- "Duas pessoas ou mais sem parentesco"
 serg2010$V5030[serg2010$V5030 == 3] <- "Duas pessoas ou mais com parentesco"
 
 serg2010$V0657[serg2010$V0657 == 1] <- "Sim"
-serg2010$V0657[serg2010$V0657 == 0] <- "Não"
+serg2010$V0657[serg2010$V0657 == 0] <- "NÃ£o"
 serg2010$V0657[serg2010$V0657 == 9] <- "Ignorado"
 
-#Variáveis de pessoas com deficiência/dificuldade
-serg2010$V0614[serg2010$V0614 == 1] <- "Sim, não consegue de modo algum"
+#VariÃ¡veis de pessoas com deficiÃªncia/dificuldade
+serg2010$V0614[serg2010$V0614 == 1] <- "Sim, nÃ£o consegue de modo algum"
 serg2010$V0614[serg2010$V0614 == 2] <- "Sim, grande dificuldade"
 serg2010$V0614[serg2010$V0614 == 3] <- "Sim, alguma dificuldade"
-serg2010$V0614[serg2010$V0614 == 4] <- "Não, nenhuma dificuldade"
+serg2010$V0614[serg2010$V0614 == 4] <- "NÃ£o, nenhuma dificuldade"
 serg2010$V0614[serg2010$V0614 == 9] <- "Ignorado"
 
-serg2010$V0615[serg2010$V0615 == 1] <- "Sim, não consegue de modo algum"
+serg2010$V0615[serg2010$V0615 == 1] <- "Sim, nÃ£o consegue de modo algum"
 serg2010$V0615[serg2010$V0615 == 2] <- "Sim, grande dificuldade"
 serg2010$V0615[serg2010$V0615 == 3] <- "Sim, alguma dificuldade"
-serg2010$V0615[serg2010$V0615 == 4] <- "Não, nenhuma dificuldade"
+serg2010$V0615[serg2010$V0615 == 4] <- "NÃ£o, nenhuma dificuldade"
 serg2010$V0615[serg2010$V0615 == 9] <- "Ignorado"
 
-serg2010$V0616[serg2010$V0616 == 1] <- "Sim, não consegue de modo algum"
+serg2010$V0616[serg2010$V0616 == 1] <- "Sim, nÃ£o consegue de modo algum"
 serg2010$V0616[serg2010$V0616 == 2] <- "Sim, grande dificuldade"
 serg2010$V0616[serg2010$V0616 == 3] <- "Sim, alguma dificuldade"
-serg2010$V0616[serg2010$V0616 == 4] <- "Não, nenhuma dificuldade"
+serg2010$V0616[serg2010$V0616 == 4] <- "NÃ£o, nenhuma dificuldade"
 serg2010$V0616[serg2010$V0616 == 9] <- "Ignorado"
 
 serg2010$V0617[serg2010$V0617 == 1] <- "Sim"
-serg2010$V0617[serg2010$V0617 == 2] <- "Não"
+serg2010$V0617[serg2010$V0617 == 2] <- "NÃ£o"
 serg2010$V0617[serg2010$V0617 == 9] <- "Ignorado"
 
-#Criando a variável de "pelo menos uma das dificuldades anteriores"
+#Criando a variÃ¡vel de "pelo menos uma das dificuldades anteriores"
 serg2010["Pelo menos uma das dificuldades anteriores"] <- with(serg2010,
-                                                               ifelse(V0614 == "Não, nenhuma dificuldade" & 
-                                                                      V0615 == "Não, nenhuma dificuldade" &
-                                                                      V0616 == "Não, nenhuma dificuldade" &
-                                                                      V0617 == "Não", "Não", "Sim"))
-#------x------x------x------x------Fim da alteração dos valores------x------x------x------x------#
+                                                               ifelse(V0614 == "NÃ£o, nenhuma dificuldade" & 
+                                                                      V0615 == "NÃ£o, nenhuma dificuldade" &
+                                                                      V0616 == "NÃ£o, nenhuma dificuldade" &
+                                                                      V0617 == "NÃ£o", "NÃ£o", "Sim"))
+#------x------x------x------x------Fim da alteraÃ§Ã£o dos valores------x------x------x------x------#
 
 
 
-#Alterando o nome das colunas, substituindo os códigos por suas respectivas descrições/categorias
+#Alterando o nome das colunas, substituindo os cÃ³digos por suas respectivas descriÃ§Ãµes/categorias
 colnames(serg2010) <- c("Sexo",
                         "Idade",
                         "Renda domiciliar per capta",
-                        "Situação do Domicílio",
-                        "Raça/Cor",
-                        "Nível de Instrução",
-                        "Vive com cônjuge ou companheiro(a)",
-                        "Relação de parentesco com a pessoa responsável pelo domicílio",
-                        "Tipo de unidade doméstica",
-                        "Recebe benefício programa social",
+                        "SituaÃ§Ã£o do DomicÃ­lio",
+                        "RaÃ§a/Cor",
+                        "NÃ­vel de InstruÃ§Ã£o",
+                        "Vive com cÃ´njuge ou companheiro(a)",
+                        "RelaÃ§Ã£o de parentesco com a pessoa responsÃ¡vel pelo domicÃ­lio",
+                        "Tipo de unidade domÃ©stica",
+                        "Recebe benefÃ­cio programa social",
                         "Dificuldade visual",
                         "Dificuldade auditiva",
                         "Dificuldade motora",
                         "Dificuldade mental ou intelectual",
                         "Pelo menos uma das dificuldades anteriores")
 
-#Criando variáveis categóricas para Idade (grupo etário) e Renda (categoria de renda)
+#Criando variÃ¡veis categÃ³ricas para Idade (grupo etÃ¡rio) e Renda (categoria de renda)
 serg2010["Grupo etario"] <- serg2010["Idade"]
 serg2010["Grupo etario"][serg2010["Idade"] >= 0 & serg2010["Idade"] < 5 ] <- "0 a 4 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 4 & serg2010["Idade"] < 10 ] <- "5 a 9 anos"
@@ -164,42 +167,42 @@ serg2010["Grupo etario"][serg2010["Idade"] > 79 & serg2010["Idade"] < 85 ] <- "8
 serg2010["Grupo etario"][serg2010["Idade"] > 84 & serg2010["Idade"] < 90 ] <- "85 a 89 anos"
 serg2010["Grupo etario"][serg2010["Idade"] >= 90 ] <- "90 anos ou mais"
 serg2010["Categoria de renda"] <- serg2010["Renda domiciliar per capta"]
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] <= 205 ] <- "Até meio salário mínimo"
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 205 & serg2010["Renda domiciliar per capta"] <= 510] <- "Entre meio e 1 salário mínimo"
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 510 & serg2010["Renda domiciliar per capta"] <= 715] <- "Entre 1 e 1,5 salários mínimos"
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 715 & serg2010["Renda domiciliar per capta"] <= 1020] <- "Entre 1,5 e 2 salários mínimos"
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 1020 ] <- "mais de 2 salários mínimos"
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] <= 205 ] <- "AtÃ© meio salÃ¡rio mÃ­nimo"
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 205 & serg2010["Renda domiciliar per capta"] <= 510] <- "Entre meio e 1 salÃ¡rio mÃ­nimo"
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 510 & serg2010["Renda domiciliar per capta"] <= 715] <- "Entre 1 e 1,5 salÃ¡rios mÃ­nimos"
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 715 & serg2010["Renda domiciliar per capta"] <= 1020] <- "Entre 1,5 e 2 salÃ¡rios mÃ­nimos"
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 1020 ] <- "mais de 2 salÃ¡rios mÃ­nimos"
 
 
-#Reordenando as colunas para incluir o "Grupo etário" após a coluna de "Idade" e "Categoria de renda" após
+#Reordenando as colunas para incluir o "Grupo etÃ¡rio" apÃ³s a coluna de "Idade" e "Categoria de renda" apÃ³s
 #a coluna "Renda domiciliar per capta"
 serg2010 <- serg2010[c("Sexo",
                        "Idade",
                        "Grupo etario",
                        "Renda domiciliar per capta",
                        "Categoria de renda",
-                       "Situação do Domicílio",
-                       "Raça/Cor",
-                       "Nível de Instrução",
-                       "Vive com cônjuge ou companheiro(a)",
-                       "Relação de parentesco com a pessoa responsável pelo domicílio",
-                       "Tipo de unidade doméstica",
-                       "Recebe benefício programa social",
+                       "SituaÃ§Ã£o do DomicÃ­lio",
+                       "RaÃ§a/Cor",
+                       "NÃ­vel de InstruÃ§Ã£o",
+                       "Vive com cÃ´njuge ou companheiro(a)",
+                       "RelaÃ§Ã£o de parentesco com a pessoa responsÃ¡vel pelo domicÃ­lio",
+                       "Tipo de unidade domÃ©stica",
+                       "Recebe benefÃ­cio programa social",
                        "Dificuldade visual",
                        "Dificuldade auditiva",
                        "Dificuldade motora",
                        "Dificuldade mental ou intelectual",
                        "Pelo menos uma das dificuldades anteriores")]
 
-#Criando as variáveis para agrupar os idosos e, em seguida, para agrupar os idosos com alguma dificuldade/deficiência
+#Criando as variÃ¡veis para agrupar os idosos e, em seguida, para agrupar os idosos com alguma dificuldade/deficiÃªncia
 idososerg2010 <- serg2010[serg2010["Idade"] >= 60, ]
 idosodific <- idososerg2010[idososerg2010["Pelo menos uma das dificuldades anteriores"] == "Sim", ]
 view(idosodific)
 
-#------x------x------x------Criando as tabelas com as análises descritivas das variáveis------x------x------x------#
+#------x------x------x------Criando as tabelas com as anÃ¡lises descritivas das variÃ¡veis------x------x------x------#
 theme_gtsummary_language(language = "pt", big.mark = ".",decimal.mark =",")
 
-#Visão estatística geral
+#VisÃ£o estatÃ­stica geral
 tbl_summary(serg2010,
             digits = list(everything() ~ c(0,1)),
             type = all_continuous() ~ "continuous2",
@@ -208,7 +211,7 @@ tbl_summary(serg2010,
                                                   "{min} - {max}"),
                              all_categorical() ~ "{n} / {N} ({p}%)"))
 
-#Visão estatística de idosos
+#VisÃ£o estatÃ­stica de idosos
 tbl_summary(idososerg2010,
             digits = list(everything() ~ c(0,1)),
             type = all_continuous() ~ "continuous2",
@@ -217,7 +220,7 @@ tbl_summary(idososerg2010,
                                                   "{min} - {max}"),
                              all_categorical() ~ "{n} / {N} ({p}%)"))
 
-#Visão estatística organizada por presença ou não de alguma dificuldade/deficiência
+#VisÃ£o estatÃ­stica organizada por presenÃ§a ou nÃ£o de alguma dificuldade/deficiÃªncia
 tbl_summary(idososerg2010, by = "Pelo menos uma das dificuldades anteriores",
             digits = list(everything() ~ c(0,1)), percent = "row",
             type = all_continuous() ~ "continuous2",
@@ -229,9 +232,9 @@ tbl_summary(idososerg2010, by = "Pelo menos uma das dificuldades anteriores",
 
 #------x------x------x------x------Testes qui-quadrado de Pearson------x------x------x------x------#
 
-#Teste qui-quadrado para variáveis categóricas
-#Considerando que as duas variáveis comparadas possuem uma distribuição estatística idêntica (H0)
-#É verificado a seguir se rejeita ou não essa hipótese, por meio do teste qui-quadrado:
+#Teste qui-quadrado para variÃ¡veis categÃ³ricas
+#Considerando que as duas variÃ¡veis comparadas possuem uma distribuiÃ§Ã£o estatÃ­stica idÃªntica (H0)
+#Ã‰ verificado a seguir se rejeita ou nÃ£o essa hipÃ³tese, por meio do teste qui-quadrado:
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
            y = idososerg2010$Sexo)
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
@@ -239,151 +242,151 @@ chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
            y = idososerg2010$`Categoria de renda`)
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
-           y = idososerg2010$`Situação do Domicílio`)
+           y = idososerg2010$`SituaÃ§Ã£o do DomicÃ­lio`)
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
-           y = idososerg2010$`Raça/Cor`)
+           y = idososerg2010$`RaÃ§a/Cor`)
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
-           y = idososerg2010$`Nível de Instrução`)
+           y = idososerg2010$`NÃ­vel de InstruÃ§Ã£o`)
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
-           y = idososerg2010$`Vive com cônjuge ou companheiro(a)`)
+           y = idososerg2010$`Vive com cÃ´njuge ou companheiro(a)`)
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
-           y = idososerg2010$`Relação de parentesco com a pessoa responsável pelo domicílio`)
+           y = idososerg2010$`RelaÃ§Ã£o de parentesco com a pessoa responsÃ¡vel pelo domicÃ­lio`)
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
-           y = idososerg2010$`Tipo de unidade doméstica`)
+           y = idososerg2010$`Tipo de unidade domÃ©stica`)
 chisq.test(x = idososerg2010$`Pelo menos uma das dificuldades anteriores`,
-           y = idososerg2010$`Recebe benefício programa social`)
+           y = idososerg2010$`Recebe benefÃ­cio programa social`)
 
 
-#------x------x------x------x------x------Gráficos------x------x------x------x------x------#
-#------Gráficos comparando com variável "Pelo menos uma das dificuldades anteriores"------#
+#------x------x------x------x------x------GrÃ¡ficos------x------x------x------x------x------#
+#------GrÃ¡ficos comparando com variÃ¡vel "Pelo menos uma das dificuldades anteriores"------#
 
 
-#Gráfico Boxplot relacionando homens e mulheres idosos, por idade, com e sem dificuldade/deficiência
+#GrÃ¡fico Boxplot relacionando homens e mulheres idosos, por idade, com e sem dificuldade/deficiÃªncia
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, y = Idade, fill=`Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Idade dos Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiÃªncia", y = "Idade dos Idosos") + 
   geom_boxplot(show.legend = F) + facet_wrap(.~as.factor(Sexo)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico Boxplot sem filtro, mostrando outliers e as diferenças entre as variáveis para idosos com e sem deficiência
+#GrÃ¡fico Boxplot sem filtro, mostrando outliers e as diferenÃ§as entre as variÃ¡veis para idosos com e sem deficiÃªncia
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, y = `Renda domiciliar per capta`, fill=`Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Renda per capta") + 
+  labs(x = "Idosos sem e com dificuldade/deficiÃªncia", y = "Renda per capta") + 
   geom_boxplot(show.legend = F) + facet_wrap(.~as.factor(Sexo)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico Box plot com filtro, mostrando principalmente se há ou não diferenças entre as variáveis para idosos com e sem deficiência
+#GrÃ¡fico Box plot com filtro, mostrando principalmente se hÃ¡ ou nÃ£o diferenÃ§as entre as variÃ¡veis para idosos com e sem deficiÃªncia
 idososerg2010 %>% filter(`Renda domiciliar per capta` < 1000) %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, y = `Renda domiciliar per capta`, fill=`Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Renda per capta abaixo de mil reais") + 
+  labs(x = "Idosos sem e com dificuldade/deficiÃªncia", y = "Renda per capta abaixo de mil reais") + 
   geom_boxplot(show.legend = F) + facet_wrap(.~as.factor(Sexo)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico de barras relacionando homens e mulheres idosos com e sem dificuldade/deficiência
+#GrÃ¡fico de barras relacionando homens e mulheres idosos com e sem dificuldade/deficiÃªncia
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiÃªncia", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(Sexo)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico de barras relacionando situação do domicílio com idosos que têm ou não algum tipo de dificuldade/deficiência
+#GrÃ¡fico de barras relacionando situaÃ§Ã£o do domicÃ­lio com idosos que tÃªm ou nÃ£o algum tipo de dificuldade/deficiÃªncia
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
-  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Situação do Domicílio`)) + 
+  labs(x = "Idosos com e sem dificuldade/deficiÃªncia", y = "Quantidade de Idosos") + 
+  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`SituaÃ§Ã£o do DomicÃ­lio`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico apresentando a porcentagem da relação acima
+#GrÃ¡fico apresentando a porcentagem da relaÃ§Ã£o acima
 freq <- idososerg2010 %>%
-  group_by(`Situação do Domicílio`, `Pelo menos uma das dificuldades anteriores`) %>%
+  group_by(`SituaÃ§Ã£o do DomicÃ­lio`, `Pelo menos uma das dificuldades anteriores`) %>%
   summarise(n = n()) %>% 
   mutate(freq = n / sum(n) * 100) %>% 
   ungroup()
 
 ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fill = `Pelo menos uma das dificuldades anteriores`, label = round(freq, 1))) +
   geom_col(position = 'dodge', show.legend = F) +
-  facet_wrap(~`Situação do Domicílio`) + 
+  facet_wrap(~`SituaÃ§Ã£o do DomicÃ­lio`) + 
   geom_text(position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico de barras relacionando Raça/cor com idosos que têm ou não alguma dificuldade/deficiência
+#GrÃ¡fico de barras relacionando RaÃ§a/cor com idosos que tÃªm ou nÃ£o alguma dificuldade/deficiÃªncia
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
-  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Raça/Cor`)) + 
+  labs(x = "Idosos com e sem dificuldade/deficiÃªncia", y = "Quantidade de Idosos") + 
+  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`RaÃ§a/Cor`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico apresentando a porcentagem da relação acima
+#GrÃ¡fico apresentando a porcentagem da relaÃ§Ã£o acima
 freq <- idososerg2010 %>%
-  group_by(`Raça/Cor`, `Pelo menos uma das dificuldades anteriores`) %>%
+  group_by(`RaÃ§a/Cor`, `Pelo menos uma das dificuldades anteriores`) %>%
   summarise(n = n()) %>% 
   mutate(freq = n / sum(n) * 100) %>% 
   ungroup()
 
 ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fill = `Pelo menos uma das dificuldades anteriores`, label = round(freq, 1))) +
   geom_col(position = 'dodge', show.legend = F) +
-  facet_wrap(~`Raça/Cor`) + 
+  facet_wrap(~`RaÃ§a/Cor`) + 
   geom_text(size = 2, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico de barras relacionando Nível de instrução com idosos que têm ou não alguma dificuldade/deficiência
-idososerg2010 %>% filter(`Nível de Instrução` != "Não determinado") %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
-  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Nível de Instrução`)) + 
+#GrÃ¡fico de barras relacionando NÃ­vel de instruÃ§Ã£o com idosos que tÃªm ou nÃ£o alguma dificuldade/deficiÃªncia
+idososerg2010 %>% filter(`NÃ­vel de InstruÃ§Ã£o` != "NÃ£o determinado") %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
+  labs(x = "Idosos com e sem dificuldade/deficiÃªncia", y = "Quantidade de Idosos") + 
+  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`NÃ­vel de InstruÃ§Ã£o`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico apresentando a porcentagem da relação acima
-freq <- idososerg2010 %>% filter(`Nível de Instrução` != "Não determinado") %>%
-  group_by(`Nível de Instrução`, `Pelo menos uma das dificuldades anteriores`) %>%
+#GrÃ¡fico apresentando a porcentagem da relaÃ§Ã£o acima
+freq <- idososerg2010 %>% filter(`NÃ­vel de InstruÃ§Ã£o` != "NÃ£o determinado") %>%
+  group_by(`NÃ­vel de InstruÃ§Ã£o`, `Pelo menos uma das dificuldades anteriores`) %>%
   summarise(n = n()) %>% 
   mutate(freq = n / sum(n) * 100) %>% 
   ungroup()
 
 ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fill = `Pelo menos uma das dificuldades anteriores`, label = round(freq, 1))) +
   geom_col(position ='dodge',show.legend = F) +
-  facet_wrap(~`Nível de Instrução`) + 
+  facet_wrap(~`NÃ­vel de InstruÃ§Ã£o`) + 
   geom_text(size = 2, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico de barras relacionando a variável Vive com cônjuge ou companheiro(a) com idosos que têm ou não alguma dificuldade/deficiência 
+#GrÃ¡fico de barras relacionando a variÃ¡vel Vive com cÃ´njuge ou companheiro(a) com idosos que tÃªm ou nÃ£o alguma dificuldade/deficiÃªncia 
 ggplot(idososerg2010, aes(x=`Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
-  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Vive com cônjuge ou companheiro(a)`)) + 
+  labs(x = "Idosos com e sem dificuldade/deficiÃªncia", y = "Quantidade de Idosos") + 
+  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Vive com cÃ´njuge ou companheiro(a)`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico para variável "Relação de parentesco" (IGNORADO POR NÃO SER MUITO SIGNIFICATIVO)
+#GrÃ¡fico para variÃ¡vel "RelaÃ§Ã£o de parentesco" (IGNORADO POR NÃƒO SER MUITO SIGNIFICATIVO)
 #ggplot(idososerg2010, aes(x=`Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-#  labs(x="Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
-#  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Relação de parentesco com a pessoa responsável pelo domicílio`)) + 
+#  labs(x="Idosos com e sem dificuldade/deficiÃªncia", y = "Quantidade de Idosos") + 
+#  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`RelaÃ§Ã£o de parentesco com a pessoa responsÃ¡vel pelo domicÃ­lio`)) + 
 #  scale_fill_manual(values=c("#84D959","#D9574A"))
 
-#Gráfico de barras relacionando o Tipo de unidade doméstica com idosos que têm ou não alguma dificuldade/deficiência
-idososerg2010 %>% filter(!is.na(`Tipo de unidade doméstica`)) %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
-  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Tipo de unidade doméstica`)) + 
+#GrÃ¡fico de barras relacionando o Tipo de unidade domÃ©stica com idosos que tÃªm ou nÃ£o alguma dificuldade/deficiÃªncia
+idososerg2010 %>% filter(!is.na(`Tipo de unidade domÃ©stica`)) %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
+  labs(x = "Idosos com e sem dificuldade/deficiÃªncia", y = "Quantidade de Idosos") + 
+  geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Tipo de unidade domÃ©stica`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico apresentando a porcentagem da relação acima
-freq <- idososerg2010 %>% filter(!is.na(`Tipo de unidade doméstica`)) %>%
-  group_by(`Tipo de unidade doméstica`, `Pelo menos uma das dificuldades anteriores`) %>%
+#GrÃ¡fico apresentando a porcentagem da relaÃ§Ã£o acima
+freq <- idososerg2010 %>% filter(!is.na(`Tipo de unidade domÃ©stica`)) %>%
+  group_by(`Tipo de unidade domÃ©stica`, `Pelo menos uma das dificuldades anteriores`) %>%
   summarise(n = n()) %>% 
   mutate(freq = n / sum(n) * 100) %>% 
   ungroup()
 
 ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fill = `Pelo menos uma das dificuldades anteriores`, label = round(freq, 1))) +
   geom_col(position ='dodge',show.legend = F) +
-  facet_wrap(~`Tipo de unidade doméstica`) + 
+  facet_wrap(~`Tipo de unidade domÃ©stica`) + 
   geom_text(size = 2, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A"))
 
-#Gráfico para variável "Se recebe benefício" (IGNORADO POR NÃO SER MUITO SIGNIFICATIVO) 
-#------Fim da comparação com variável "Pelo menos uma das dificuldades anteriores"------#
+#GrÃ¡fico para variÃ¡vel "Se recebe benefÃ­cio" (IGNORADO POR NÃƒO SER MUITO SIGNIFICATIVO) 
+#------Fim da comparaÃ§Ã£o com variÃ¡vel "Pelo menos uma das dificuldades anteriores"------#
 
 
-#------Gráficos comparando com variáveis de dificuldade/deficiência específicas------#
+#------GrÃ¡ficos comparando com variÃ¡veis de dificuldade/deficiÃªncia especÃ­ficas------#
 
-#Gráfico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade visual
+#GrÃ¡fico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade visual
 idososerg2010 %>% filter(`Dificuldade visual` != "Ignorado") %>% ggplot(aes(x = `Dificuldade visual`, fill = `Dificuldade visual`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência visual", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiÃªncia visual", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Sexo`)) + 
   scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
-#Gráfico apresentando a porcentagem da relação acima
+#GrÃ¡fico apresentando a porcentagem da relaÃ§Ã£o acima
 freq <- idososerg2010 %>% filter(`Dificuldade visual` != "Ignorado") %>%
   group_by(Sexo, `Dificuldade visual`) %>%
   summarise(n = n()) %>% 
@@ -397,14 +400,14 @@ ggplot(freq, aes(x = `Dificuldade visual`, y = freq, fill = `Dificuldade visual`
   theme_classic() + scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
-#Gráfico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade auditiva
+#GrÃ¡fico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade auditiva
 idososerg2010 %>% filter(`Dificuldade auditiva` != "Ignorado") %>% ggplot(aes(x = `Dificuldade auditiva`, fill = `Dificuldade auditiva`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência auditiva", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiÃªncia auditiva", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Sexo`)) + 
   scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
-#Gráfico apresentando a porcentagem da relação acima
+#GrÃ¡fico apresentando a porcentagem da relaÃ§Ã£o acima
 freq <- idososerg2010 %>% filter(`Dificuldade auditiva` != "Ignorado") %>%
   group_by(Sexo, `Dificuldade auditiva`) %>%
   summarise(n = n()) %>% 
@@ -418,14 +421,14 @@ ggplot(freq, aes(x = `Dificuldade auditiva`, y = freq, fill = `Dificuldade audit
   theme_classic() + scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
-#Gráfico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade motora
+#GrÃ¡fico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade motora
 idososerg2010 %>% filter(`Dificuldade motora` != "Ignorado") %>% ggplot(aes(x = `Dificuldade motora`, fill = `Dificuldade motora`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência Motora", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiÃªncia Motora", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Sexo`)) + 
   scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
-#Gráfico apresentando a porcentagem da relação acima
+#GrÃ¡fico apresentando a porcentagem da relaÃ§Ã£o acima
 freq <- idososerg2010 %>% filter(`Dificuldade motora` != "Ignorado") %>%
   group_by(Sexo, `Dificuldade motora`) %>%
   summarise(n = n()) %>% 
@@ -439,14 +442,14 @@ ggplot(freq, aes(x = `Dificuldade motora`, y = freq, fill = `Dificuldade motora`
   theme_classic() + scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
-#Gráfico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade mental ou intelectual
+#GrÃ¡fico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade mental ou intelectual
 idososerg2010 %>% filter(`Dificuldade mental ou intelectual` != "Ignorado") %>% ggplot(aes(x = `Dificuldade mental ou intelectual`, fill = `Dificuldade mental ou intelectual`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência mental/intelectual", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiÃªncia mental/intelectual", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Sexo`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
-#Gráfico apresentando a porcentagem da relação acima
+#GrÃ¡fico apresentando a porcentagem da relaÃ§Ã£o acima
 freq <- idososerg2010 %>% filter(`Dificuldade mental ou intelectual` != "Ignorado") %>%
   group_by(Sexo, `Dificuldade mental ou intelectual`) %>%
   summarise(n = n()) %>% 
@@ -459,6 +462,6 @@ ggplot(freq, aes(x = `Dificuldade mental ou intelectual`, y = freq, fill = `Difi
   geom_text(size = 3, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
-#------x------x------x------Fim da comparação com variáveis específicas------x------x------x------#
+#------x------x------x------Fim da comparaÃ§Ã£o com variÃ¡veis especÃ­ficas------x------x------x------#
 
 #------x------x------x------x------Fim do algoritmo \o/------x------x------x------x------#
