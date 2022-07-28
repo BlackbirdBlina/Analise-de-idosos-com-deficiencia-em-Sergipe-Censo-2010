@@ -157,7 +157,7 @@ serg2010["Grupo etario"][serg2010["Idade"] > 29 & serg2010["Idade"] < 35 ] <- "3
 serg2010["Grupo etario"][serg2010["Idade"] > 34 & serg2010["Idade"] < 40 ] <- "35 a 39 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 39 & serg2010["Idade"] < 45 ] <- "40 a 44 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 44 & serg2010["Idade"] < 50 ] <- "45 a 49 anos"
-serg2010["Grupo etario"][serg2010["Idade"] > 49 & serg2010["Idade"] < 55 ] <- "50 a 55 anos"
+serg2010["Grupo etario"][serg2010["Idade"] > 49 & serg2010["Idade"] < 55 ] <- "50 a 54 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 54 & serg2010["Idade"] < 60 ] <- "55 a 59 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 59 & serg2010["Idade"] < 65 ] <- "60 a 64 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 64 & serg2010["Idade"] < 70 ] <- "65 a 69 anos"
@@ -281,13 +281,13 @@ idososerg2010 %>% filter(`Renda domiciliar per capta` < 1000) %>% ggplot(aes(x =
 
 #Gráfico de barras relacionando homens e mulheres idosos com e sem dificuldade/deficiência
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(Sexo)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
 #Gráfico de barras relacionando situação do domicílio com idosos que têm ou não algum tipo de dificuldade/deficiência
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Situação do Domicílio`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
@@ -306,7 +306,7 @@ ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fil
 
 #Gráfico de barras relacionando Raça/cor com idosos que têm ou não alguma dificuldade/deficiência
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Raça/Cor`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
@@ -325,7 +325,7 @@ ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fil
 
 #Gráfico de barras relacionando Nível de instrução com idosos que têm ou não alguma dificuldade/deficiência
 idososerg2010 %>% filter(`Nível de Instrução` != "Não determinado") %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Nível de Instrução`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
@@ -344,7 +344,7 @@ ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fil
 
 #Gráfico de barras relacionando a variável Vive com cônjuge ou companheiro(a) com idosos que têm ou não alguma dificuldade/deficiência 
 ggplot(idososerg2010, aes(x=`Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Vive com cônjuge ou companheiro(a)`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
@@ -356,7 +356,7 @@ ggplot(idososerg2010, aes(x=`Pelo menos uma das dificuldades anteriores`, fill =
 
 #Gráfico de barras relacionando o Tipo de unidade doméstica com idosos que têm ou não alguma dificuldade/deficiência
 idososerg2010 %>% filter(!is.na(`Tipo de unidade doméstica`)) %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Tipo de unidade doméstica`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
@@ -381,7 +381,7 @@ ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fil
 
 #Gráfico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade visual
 idososerg2010 %>% filter(`Dificuldade visual` != "Ignorado") %>% ggplot(aes(x = `Dificuldade visual`, fill = `Dificuldade visual`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência visual", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiência visual", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Sexo`)) + 
   scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
@@ -402,7 +402,7 @@ ggplot(freq, aes(x = `Dificuldade visual`, y = freq, fill = `Dificuldade visual`
 
 #Gráfico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade auditiva
 idososerg2010 %>% filter(`Dificuldade auditiva` != "Ignorado") %>% ggplot(aes(x = `Dificuldade auditiva`, fill = `Dificuldade auditiva`)) +
-  labs(x = "Idosos com e sem dificuldade/deficiência auditiva", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos sem e com dificuldade/deficiência auditiva", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Sexo`)) + 
   scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
