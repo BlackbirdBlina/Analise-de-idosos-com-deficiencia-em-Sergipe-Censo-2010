@@ -147,8 +147,8 @@ colnames(serg2010) <- c("Sexo",
 
 #Criando variáveis categóricas para Idade (grupo etário) e Renda (categoria de renda)
 serg2010["Grupo etario"] <- serg2010["Idade"]
-serg2010["Grupo etario"][serg2010["Idade"] >= 0 & serg2010["Idade"] < 5 ] <- "0 a 4 anos"
-serg2010["Grupo etario"][serg2010["Idade"] > 4 & serg2010["Idade"] < 10 ] <- "5 a 9 anos"
+serg2010["Grupo etario"][serg2010["Idade"] >= 0 & serg2010["Idade"] < 5 ] <- "0 a 04 anos"
+serg2010["Grupo etario"][serg2010["Idade"] > 4 & serg2010["Idade"] < 10 ] <- "05 a 09 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 9 & serg2010["Idade"] < 15 ] <- "10 a 14 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 14 & serg2010["Idade"] < 20 ] <- "15 a 19 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 19 & serg2010["Idade"] < 25 ] <- "20 a 24 anos"
