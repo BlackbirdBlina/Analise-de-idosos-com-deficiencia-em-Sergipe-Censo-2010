@@ -477,5 +477,5 @@ numpessoativaserg2010 <- serg2010[serg2010["Idade"] >= 15 & serg2010["Idade"] < 
 numpessoativaserg2010 <- count(numpessoativaserg2010)
 
 rdiserg2010 <- idososdependserg2010[1,1]/numpessoativaserg2010[1,1]
-rdiserg2010
+rdiserg2010 * 100
 #------x------x------x------x------Fim do algoritmo \o/------x------x------x------x------#
