@@ -472,10 +472,10 @@ proporidoserg2010 * 100
 
 #------x------x------x------Razão de dependência de Idosos------x------x------x------#
 idososdependserg2010 <- serg2010[serg2010["Idade"] >= 65, ]
-count(idososdependserg2010)
+idososdependserg2010 <- count(idososdependserg2010)
 numpessoativaserg2010 <- serg2010[serg2010["Idade"] >= 15 & serg2010["Idade"] < 65, ]
-count(numpessoativaserg2010)
+numpessoativaserg2010 <- count(numpessoativaserg2010)
 
-rdiserg2010 <- idososdependserg2010[1,2]/numpessoativaserg2010[1,2]
+rdiserg2010 <- idososdependserg2010[1,1]/numpessoativaserg2010[1,1]
 rdiserg2010
 #------x------x------x------x------Fim do algoritmo \o/------x------x------x------x------#
