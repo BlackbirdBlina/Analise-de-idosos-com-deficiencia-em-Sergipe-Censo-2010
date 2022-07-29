@@ -476,6 +476,6 @@ count(idososdependserg2010)
 numpessoativaserg2010 <- serg2010[serg2010["Idade"] >= 15 & serg2010["Idade"] < 65, ]
 count(numpessoativaserg2010)
 
-rdiserg <- idososdependserg2010[1,2]/numpessoativaserg2010[1,2]
-rdiserg
+rdiserg2010 <- idososdependserg2010[1,2]/numpessoativaserg2010[1,2]
+rdiserg2010
 #------x------x------x------x------Fim do algoritmo \o/------x------x------x------x------#
