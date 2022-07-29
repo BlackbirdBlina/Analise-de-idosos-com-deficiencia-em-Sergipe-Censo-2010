@@ -464,4 +464,18 @@ ggplot(freq, aes(x = `Dificuldade mental ou intelectual`, y = freq, fill = `Difi
   scale_x_discrete(guide = guide_axis(angle = -90))
 #------x------x------x------Fim da comparação com variáveis específicas------x------x------x------#
 
+#------x------x------x------Número de idosos em relação a população total------x------x------x------#
+numpeserg2010 <- count(serg2010, "Idade")
+numidoserg2010 <- count(idososerg2010, "Idade")
+proporidoserg2010 <- numidoserg2010[1,2]/numpeserg2010[1,2]
+proporidoserg2010 * 100
+
+#------x------x------x------Razão de dependência de Idosos------x------x------x------#
+idososdependserg2010 <- serg2010[serg2010["Idade"] >= 65, ]
+count(idososdependserg2010)
+numpessoativaserg2010 <- serg2010[serg2010["Idade"] >= 15 & serg2010["Idade"] < 65, ]
+count(numpessoativaserg2010)
+
+rdiserg <- idososdependserg2010[1,2]/numpessoativaserg2010[1,2]
+rdiserg
 #------x------x------x------x------Fim do algoritmo \o/------x------x------x------x------#
