@@ -131,7 +131,7 @@ serg2010["Pelo menos uma das dificuldades anteriores"] <- with(serg2010,
 #Alterando o nome das colunas, substituindo os códigos por suas respectivas descrições/categorias
 colnames(serg2010) <- c("Sexo",
                         "Idade",
-                        "Renda domiciliar per capta",
+                        "Renda domiciliar per capita",
                         "Situação do Domicílio",
                         "Raça/Cor",
                         "Nível de Instrução",
@@ -166,20 +166,20 @@ serg2010["Grupo etario"][serg2010["Idade"] > 74 & serg2010["Idade"] < 80 ] <- "7
 serg2010["Grupo etario"][serg2010["Idade"] > 79 & serg2010["Idade"] < 85 ] <- "80 a 84 anos"
 serg2010["Grupo etario"][serg2010["Idade"] > 84 & serg2010["Idade"] < 90 ] <- "85 a 89 anos"
 serg2010["Grupo etario"][serg2010["Idade"] >= 90 ] <- "90 anos ou mais"
-serg2010["Categoria de renda"] <- serg2010["Renda domiciliar per capta"]
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] <= 205 ] <- "Até meio salário mínimo"
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 205 & serg2010["Renda domiciliar per capta"] <= 510] <- "Entre meio e 1 salário mínimo"
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 510 & serg2010["Renda domiciliar per capta"] <= 715] <- "Entre 1 e 1,5 salários mínimos"
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 715 & serg2010["Renda domiciliar per capta"] <= 1020] <- "Entre 1,5 e 2 salários mínimos"
-serg2010["Categoria de renda"][serg2010["Renda domiciliar per capta"] > 1020 ] <- "mais de 2 salários mínimos"
+serg2010["Categoria de renda"] <- serg2010["Renda domiciliar per capita"]
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capita"] <= 205 ] <- "Até meio salário mínimo"
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capita"] > 205 & serg2010["Renda domiciliar per capita"] <= 510] <- "Entre meio e 1 salário mínimo"
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capita"] > 510 & serg2010["Renda domiciliar per capita"] <= 715] <- "Entre 1 e 1,5 salários mínimos"
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capita"] > 715 & serg2010["Renda domiciliar per capita"] <= 1020] <- "Entre 1,5 e 2 salários mínimos"
+serg2010["Categoria de renda"][serg2010["Renda domiciliar per capita"] > 1020 ] <- "mais de 2 salários mínimos"
 
 
 #Reordenando as colunas para incluir o "Grupo etário" após a coluna de "Idade" e "Categoria de renda" após
-#a coluna "Renda domiciliar per capta"
+#a coluna "Renda domiciliar per capita"
 serg2010 <- serg2010[c("Sexo",
                        "Idade",
                        "Grupo etario",
-                       "Renda domiciliar per capta",
+                       "Renda domiciliar per capita",
                        "Categoria de renda",
                        "Situação do Domicílio",
                        "Raça/Cor",
@@ -268,14 +268,14 @@ ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, y = 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
 #Gráfico Boxplot sem filtro, mostrando outliers e as diferenças entre as variáveis para idosos com e sem deficiência
-ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, y = `Renda domiciliar per capta`, fill=`Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Renda per capta") + 
+ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, y = `Renda domiciliar per capita`, fill=`Pelo menos uma das dificuldades anteriores`)) +
+  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Renda per capita") + 
   geom_boxplot(show.legend = F) + facet_wrap(.~as.factor(Sexo)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
 #Gráfico Box plot com filtro, mostrando principalmente se há ou não diferenças entre as variáveis para idosos com e sem deficiência
-idososerg2010 %>% filter(`Renda domiciliar per capta` < 1000) %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, y = `Renda domiciliar per capta`, fill=`Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Renda per capta abaixo de mil reais") + 
+idososerg2010 %>% filter(`Renda domiciliar per capita` < 1000) %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, y = `Renda domiciliar per capita`, fill=`Pelo menos uma das dificuldades anteriores`)) +
+  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Renda per capita abaixo de mil reais") + 
   geom_boxplot(show.legend = F) + facet_wrap(.~as.factor(Sexo)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
