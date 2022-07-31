@@ -3,6 +3,8 @@
 #Universidade Federal do Rio Grande do Norte
 #Departamento de Demografia - CCET
 
+setwd ("C:\\Users\\sabri\\OneDrive\\Documentos\\Bina\\UFRN\\Mestrado\\Disciplinas\\Métodos Quantitativos 1\\Aulas\\Trabalho final")
+
 #Pacotes necessários
 library(pacman)
 p_load(tidyverse,data.table,readr,readxl,vroom, tableone, gtsummary, ggplot2)
@@ -124,6 +126,7 @@ serg2010["Pelo menos uma das dificuldades anteriores"] <- with(serg2010,
                                                                       V0615 == "Não, nenhuma dificuldade" &
                                                                       V0616 == "Não, nenhuma dificuldade" &
                                                                       V0617 == "Não", "Não", "Sim"))
+view(serg2010)
 #------x------x------x------x------Fim da alteração dos valores------x------x------x------x------#
 
 
@@ -174,6 +177,7 @@ serg2010["Categoria de renda"][serg2010["Renda domiciliar per capita"] > 715 & s
 serg2010["Categoria de renda"][serg2010["Renda domiciliar per capita"] > 1020 ] <- "mais de 2 salários mínimos"
 
 
+view(serg2010)
 #Reordenando as colunas para incluir o "Grupo etário" após a coluna de "Idade" e "Categoria de renda" após
 #a coluna "Renda domiciliar per capita"
 serg2010 <- serg2010[c("Sexo",
@@ -193,9 +197,10 @@ serg2010 <- serg2010[c("Sexo",
                        "Dificuldade motora",
                        "Dificuldade mental ou intelectual",
                        "Pelo menos uma das dificuldades anteriores")]
-
+view(serg2010)
 #Criando as variáveis para agrupar os idosos e, em seguida, para agrupar os idosos com alguma dificuldade/deficiência
 idososerg2010 <- serg2010[serg2010["Idade"] >= 60, ]
+view(idososerg2010)
 idosodific <- idososerg2010[idososerg2010["Pelo menos uma das dificuldades anteriores"] == "Sim", ]
 view(idosodific)
 
@@ -281,13 +286,13 @@ idososerg2010 %>% filter(`Renda domiciliar per capita` < 1000) %>% ggplot(aes(x 
 
 #Gráfico de barras relacionando homens e mulheres idosos com e sem dificuldade/deficiência
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(Sexo)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
 #Gráfico de barras relacionando situação do domicílio com idosos que têm ou não algum tipo de dificuldade/deficiência
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Situação do Domicílio`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
@@ -306,7 +311,7 @@ ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fil
 
 #Gráfico de barras relacionando Raça/cor com idosos que têm ou não alguma dificuldade/deficiência
 ggplot(idososerg2010, aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Raça/Cor`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
@@ -320,12 +325,12 @@ freq <- idososerg2010 %>%
 ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fill = `Pelo menos uma das dificuldades anteriores`, label = round(freq, 1))) +
   geom_col(position = 'dodge', show.legend = F) +
   facet_wrap(~`Raça/Cor`) + 
-  geom_text(size = 2, position = position_nudge(x = 0, y = 2)) +
+  geom_text(size = 3, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A"))
 
 #Gráfico de barras relacionando Nível de instrução com idosos que têm ou não alguma dificuldade/deficiência
 idososerg2010 %>% filter(`Nível de Instrução` != "Não determinado") %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Nível de Instrução`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
@@ -339,14 +344,27 @@ freq <- idososerg2010 %>% filter(`Nível de Instrução` != "Não determinado") 
 ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fill = `Pelo menos uma das dificuldades anteriores`, label = round(freq, 1))) +
   geom_col(position ='dodge',show.legend = F) +
   facet_wrap(~`Nível de Instrução`) + 
-  geom_text(size = 2, position = position_nudge(x = 0, y = 2)) +
+  geom_text(size = 3, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A"))
 
 #Gráfico de barras relacionando a variável Vive com cônjuge ou companheiro(a) com idosos que têm ou não alguma dificuldade/deficiência 
 ggplot(idososerg2010, aes(x=`Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Vive com cônjuge ou companheiro(a)`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
+
+#Gráfico apresentando a porcentagem da relação acima
+freq <- idososerg2010 %>% filter(`Nível de Instrução` != "Não determinado") %>%
+  group_by(`Vive com cônjuge ou companheiro(a)`, `Pelo menos uma das dificuldades anteriores`) %>%
+  summarise(n = n()) %>% 
+  mutate(freq = n / sum(n) * 100) %>% 
+  ungroup()
+
+ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fill = `Pelo menos uma das dificuldades anteriores`, label = round(freq, 1))) +
+  geom_col(position ='dodge',show.legend = F) +
+  facet_wrap(~`Vive com cônjuge ou companheiro(a)`) + 
+  geom_text(size = 3, position = position_nudge(x = 0, y = 2)) +
+  theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A"))
 
 #Gráfico para variável "Relação de parentesco" (IGNORADO POR NÃO SER MUITO SIGNIFICATIVO)
 #ggplot(idososerg2010, aes(x=`Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
@@ -356,7 +374,7 @@ ggplot(idososerg2010, aes(x=`Pelo menos uma das dificuldades anteriores`, fill =
 
 #Gráfico de barras relacionando o Tipo de unidade doméstica com idosos que têm ou não alguma dificuldade/deficiência
 idososerg2010 %>% filter(!is.na(`Tipo de unidade doméstica`)) %>% ggplot(aes(x = `Pelo menos uma das dificuldades anteriores`, fill = `Pelo menos uma das dificuldades anteriores`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiência", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Tipo de unidade doméstica`)) + 
   scale_fill_manual(values = c("#84D959","#D9574A"))
 
@@ -370,7 +388,7 @@ freq <- idososerg2010 %>% filter(!is.na(`Tipo de unidade doméstica`)) %>%
 ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fill = `Pelo menos uma das dificuldades anteriores`, label = round(freq, 1))) +
   geom_col(position ='dodge',show.legend = F) +
   facet_wrap(~`Tipo de unidade doméstica`) + 
-  geom_text(size = 2, position = position_nudge(x = 0, y = 2)) +
+  geom_text(size = 3, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A"))
 
 #Gráfico para variável "Se recebe benefício" (IGNORADO POR NÃO SER MUITO SIGNIFICATIVO) 
@@ -381,7 +399,7 @@ ggplot(freq, aes(x = `Pelo menos uma das dificuldades anteriores`, y = freq, fil
 
 #Gráfico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade visual
 idososerg2010 %>% filter(`Dificuldade visual` != "Ignorado") %>% ggplot(aes(x = `Dificuldade visual`, fill = `Dificuldade visual`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência visual", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiência visual", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Sexo`)) + 
   scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
@@ -396,13 +414,13 @@ freq <- idososerg2010 %>% filter(`Dificuldade visual` != "Ignorado") %>%
 ggplot(freq, aes(x = `Dificuldade visual`, y = freq, fill = `Dificuldade visual`, label = round(freq, 1))) +
   geom_col(position ='dodge',show.legend = F) +
   facet_wrap(~Sexo) + 
-  geom_text(size = 2, position = position_nudge(x = 0, y = 2)) +
+  geom_text(size = 3, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
 #Gráfico de barras relacionando idosos categorizados por feminino e masculino com e sem dificuldade auditiva
 idososerg2010 %>% filter(`Dificuldade auditiva` != "Ignorado") %>% ggplot(aes(x = `Dificuldade auditiva`, fill = `Dificuldade auditiva`)) +
-  labs(x = "Idosos sem e com dificuldade/deficiência auditiva", y = "Quantidade de Idosos") + 
+  labs(x = "Idosos com e sem dificuldade/deficiência auditiva", y = "Quantidade de Idosos") + 
   geom_bar(show.legend = F) + facet_wrap(.~as.factor(`Sexo`)) + 
   scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
@@ -417,7 +435,7 @@ freq <- idososerg2010 %>% filter(`Dificuldade auditiva` != "Ignorado") %>%
 ggplot(freq, aes(x = `Dificuldade auditiva`, y = freq, fill = `Dificuldade auditiva`, label = round(freq, 1))) +
   geom_col(position ='dodge',show.legend = F) +
   facet_wrap(~Sexo) + 
-  geom_text(size = 2, position = position_nudge(x = 0, y = 2)) +
+  geom_text(size = 3, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
@@ -438,7 +456,7 @@ freq <- idososerg2010 %>% filter(`Dificuldade motora` != "Ignorado") %>%
 ggplot(freq, aes(x = `Dificuldade motora`, y = freq, fill = `Dificuldade motora`, label = round(freq, 1))) +
   geom_col(position ='dodge',show.legend = F) +
   facet_wrap(~Sexo) + 
-  geom_text(size = 2, position = position_nudge(x = 0, y = 2)) +
+  geom_text(size = 3, position = position_nudge(x = 0, y = 2)) +
   theme_classic() + scale_fill_manual(values = c("#84D959","#F59D37", "#D9574A", "#8C0404")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 
@@ -463,8 +481,8 @@ ggplot(freq, aes(x = `Dificuldade mental ou intelectual`, y = freq, fill = `Difi
   theme_classic() + scale_fill_manual(values = c("#84D959","#D9574A")) +
   scale_x_discrete(guide = guide_axis(angle = -90))
 #------x------x------x------Fim da comparação com variáveis específicas------x------x------x------#
+#------x------x------x------Número de idosos em relação à população total------x------x------x------#
 
-#------x------x------x------Número de idosos em relação a população total------x------x------x------#
 numpeserg2010 <- count(serg2010, "Idade")
 numidoserg2010 <- count(idososerg2010, "Idade")
 proporidoserg2010 <- numidoserg2010[1,2]/numpeserg2010[1,2]
@@ -478,4 +496,5 @@ numpessoativaserg2010 <- count(numpessoativaserg2010)
 
 rdiserg2010 <- idososdependserg2010[1,1]/numpessoativaserg2010[1,1]
 rdiserg2010 * 100
+
 #------x------x------x------x------Fim do algoritmo \o/------x------x------x------x------#
